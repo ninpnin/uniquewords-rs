@@ -6,7 +6,7 @@ mod io;
 
 //use crate::io;
 
-/// Simple program to greet a person
+/// Count the frequencies of words in text file(s)
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
