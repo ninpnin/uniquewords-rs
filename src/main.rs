@@ -18,7 +18,6 @@ struct Args {
     limit: u32,
 }
 
-
 fn main() {
 
     let args = Args::parse();
@@ -41,5 +40,10 @@ fn main() {
 
     let limit = args.limit;
     let freqs: HashMap<&String, usize> = words.iter().counts().into_iter().filter(|(k,v)| v >= &&(limit as usize)).collect();
-    println!("{:?}", freqs);
+    let serialization_result = serde_json::to_string_pretty(&freqs);
+
+    match serialization_result {
+        Ok(v) => println!("{}", v),
+        Err(e) => eprintln!("error parsing header: {e:?}"),
+    }
 }
