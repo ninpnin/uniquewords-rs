@@ -12,3 +12,9 @@ OPTIONS:
     -l, --limit <LIMIT>            
     -V, --version                  Print version information
 ```
+
+## Installation
+
+```bash
+cargo install uniquewords-rs
+```
