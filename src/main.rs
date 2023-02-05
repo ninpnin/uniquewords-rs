@@ -14,6 +14,7 @@ struct Args {
     #[clap(short, long)]
     data_path: Vec<String>,
 
+    /// Lower limit for the number of occurences of a word to be included
     #[clap(short, long)]
     limit: u32,
 }
@@ -31,7 +32,7 @@ fn main() {
                     
                     let tokens = clean_line.split_whitespace();
                     for token in tokens {
-                        words.push(token.to_string());//println!("{}", token);
+                        words.push(token.to_string());
                     }
                 }
             }
