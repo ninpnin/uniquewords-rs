@@ -15,7 +15,7 @@ struct Args {
     data_path: Vec<String>,
 
     /// Lower limit for the number of occurences of a word to be included
-    #[clap(short, long)]
+    #[clap(short, long, default_value_t = 5)]
     limit: u32,
 }
 
