@@ -11,7 +11,6 @@ mod io;
 #[clap(author, version, about, long_about = None)]
 struct Args {
     /// Path to the .txt data files
-    #[clap(short, long)]
     data_path: Vec<String>,
 
     /// Lower limit for the number of occurences of a word to be included
