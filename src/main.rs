@@ -1,10 +1,9 @@
 use itertools::Itertools;
 use clap::Parser;
 use std::collections::HashMap;
-
+use log::{info, warn};
+use indicatif::{ProgressBar, ProgressIterator, ProgressStyle};
 mod io;
-
-//use crate::io;
 
 /// Count the frequencies of words in text file(s)
 #[derive(Parser, Debug)]
@@ -37,9 +36,13 @@ fn main() {
             }
         }
     }
+    if words.len() == 0 {
+        warn!("Warning! {}!", "the specified file(s) contain no text");
+        eprintln!("warning: the specified file(s) contain no text");
+    }
 
     let limit = args.limit;
-    let freqs: HashMap<&String, usize> = words.iter().counts().into_iter().filter(|(k,v)| v >= &&(limit as usize)).collect();
+    let freqs: HashMap<&String, usize> = words.iter().progress().counts().into_iter().progress().filter(|(k,v)| v >= &&(limit as usize)).collect();
     let serialization_result = serde_json::to_string_pretty(&freqs);
 
     match serialization_result {
