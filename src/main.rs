@@ -22,6 +22,8 @@ fn main() {
     let args = Args::parse();
     let mut words: Vec<String> = vec![];
 
+    let no_of_files = args.data_path.len();
+    let filebar = ProgressBar::new(no_of_files as u64);
     for data_path in args.data_path {
         let contents = io::read_lines(data_path);
         if let Ok(lines) = contents {
@@ -35,7 +37,10 @@ fn main() {
                 }
             }
         }
+        filebar.inc(1);
     }
+    filebar.finish();
+    
     if words.len() == 0 {
         warn!("Warning! {}!", "the specified file(s) contain no text");
         eprintln!("warning: the specified file(s) contain no text");
