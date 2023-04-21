@@ -15,10 +15,19 @@ struct Args {
     /// Lower limit for the number of occurences of a word to be included
     #[clap(short, long, default_value_t = 5)]
     limit: u32,
+
+    /// Output frequencies instead of total counts
+    #[clap(short, long, action)]
+    freqs: bool,
+
+    /// Remove punctuation ('(', ')', ',', '\"', '.', ';', ':', '\'', '?', '!')
+    #[clap(short, long, action)]
+    clean: bool,
+
 }
 
 fn main() {
-
+    let punctuation = ['(', ')', ',', '\"', '.', ';', ':', '\'', '?', '!'];
     let args = Args::parse();
     let mut words: Vec<String> = vec![];
 
@@ -29,10 +38,13 @@ fn main() {
         if let Ok(lines) = contents {
             for line in lines {
                 if let Ok(clean_line) = line {
-                    
                     let tokens = clean_line.split_whitespace();
                     for token in tokens {
-                        words.push(token.to_string());
+                        let mut clean_token = token.to_string();
+                        if args.clean {
+                            clean_token = token.replace(&punctuation[..], "");
+                        }
+                        words.push(clean_token);
                     }
                 }
             }
@@ -41,17 +53,28 @@ fn main() {
     }
     filebar.finish();
     
-    if words.len() == 0 {
+    let N = words.len();
+    if N == 0 {
         warn!("Warning! {}!", "the specified file(s) contain no text");
         eprintln!("warning: the specified file(s) contain no text");
     }
 
     let limit = args.limit;
-    let freqs: HashMap<&String, usize> = words.iter().progress().counts().into_iter().progress().filter(|(k,v)| v >= &&(limit as usize)).collect();
-    let serialization_result = serde_json::to_string_pretty(&freqs);
+    let counts: HashMap<&String, usize> = words.iter().progress().counts().into_iter().progress().filter(|(k,v)| v >= &&(limit as usize)).collect();
+    if !args.freqs {
+        let serialization_result = serde_json::to_string_pretty(&counts);
 
-    match serialization_result {
-        Ok(v) => println!("{}", v),
-        Err(e) => eprintln!("error parsing header: {e:?}"),
+        match serialization_result {
+            Ok(v) => println!("{}", v),
+            Err(e) => eprintln!("error parsing header: {e:?}"),
+        }
+    } else {
+        let freqs: HashMap<&String, f32> = counts.into_iter().map(|(k,v)| (k, v as f32 / (N as f32))).collect();
+        let serialization_result = serde_json::to_string_pretty(&freqs);
+        match serialization_result {
+            Ok(v) => println!("{}", v),
+            Err(e) => eprintln!("error parsing header: {e:?}"),
+        }
+
     }
 }
