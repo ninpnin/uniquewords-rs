@@ -24,6 +24,10 @@ struct Args {
     #[clap(short, long, action)]
     clean: bool,
 
+    /// Convert all words to lowercase
+    #[clap(long, action)]
+    lower: bool,
+
 }
 
 fn main() {
@@ -43,6 +47,9 @@ fn main() {
                         let mut clean_token = token.to_string();
                         if args.clean {
                             clean_token = token.replace(&punctuation[..], "");
+                        }
+                        if args.clean {
+                            clean_token = clean_token.to_lowercase();
                         }
                         words.push(clean_token);
                     }
