@@ -2,3 +2,4 @@
 Cargo.lock
 **.txt
 counts.json
+**/.DS_Store
