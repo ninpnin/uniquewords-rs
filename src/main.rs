@@ -48,7 +48,7 @@ fn main() {
                         if args.clean {
                             clean_token = token.replace(&punctuation[..], "");
                         }
-                        if args.clean {
+                        if args.lower {
                             clean_token = clean_token.to_lowercase();
                         }
                         words.push(clean_token);
