@@ -24,6 +24,10 @@ struct Args {
     #[clap(short, long, action)]
     clean: bool,
 
+    /// Remove numbers
+    #[clap(long, action)]
+    clean_numbers: bool,
+
     /// Convert all words to lowercase
     #[clap(long, action)]
     lower: bool,
@@ -32,6 +36,7 @@ struct Args {
 
 fn main() {
     let punctuation = ['(', ')', ',', '\"', '.', ';', ':', '\'', '?', '!'];
+    let numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
     let args = Args::parse();
     let mut words: Vec<String> = vec![];
 
@@ -47,6 +52,9 @@ fn main() {
                         let mut clean_token = token.to_string();
                         if args.clean {
                             clean_token = token.replace(&punctuation[..], "");
+                        }
+                        if args.clean_numbers {
+                            clean_token = clean_token.replace(&numbers[..], "");
                         }
                         if args.lower {
                             clean_token = clean_token.to_lowercase();
