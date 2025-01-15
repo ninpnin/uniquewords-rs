@@ -1,6 +1,6 @@
 [package]
 name = "uniquewords-rs"
-version = "0.8.0"
+version = "0.9.0"
 edition = "2021"
 license = "MIT"
 description = "Count the frequencies of words in text file(s) or stdin"
