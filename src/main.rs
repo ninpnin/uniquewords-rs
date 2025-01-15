@@ -6,11 +6,11 @@ use indicatif::{ProgressBar, ProgressIterator, ProgressStyle};
 mod io;
 use std::io::{stdin};
 
-/// Count the frequencies of words in text file(s)
+/// Count the frequencies of words in text file(s) or stdin
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    /// Path to the .txt data files
+    /// Path to the .txt data files. Not required when using stdin
     data_path: Vec<String>,
 
     /// Lower limit for the number of occurences of a word to be included
@@ -70,6 +70,8 @@ fn main() {
     filebar.finish();
 
     let stdin_lines = std::io::stdin().lines();
+
+    let stdinbar = ProgressBar::no_length();
     for line in stdin_lines {
         //eprintln!("got a line: {}", line.unwrap());
         if let Ok(clean_line) = line {
@@ -89,7 +91,7 @@ fn main() {
                 words.push(clean_token);
             }
         }
-
+        filebar.inc(1);
     }
 
     let N = words.len();
