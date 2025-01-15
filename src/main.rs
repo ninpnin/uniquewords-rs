@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use log::{info, warn};
 use indicatif::{ProgressBar, ProgressIterator, ProgressStyle};
 mod io;
+use std::io::{stdin};
 
 /// Count the frequencies of words in text file(s)
 #[derive(Parser, Debug)]
@@ -67,7 +68,30 @@ fn main() {
         filebar.inc(1);
     }
     filebar.finish();
-    
+
+    let stdin_lines = std::io::stdin().lines();
+    for line in stdin_lines {
+        //eprintln!("got a line: {}", line.unwrap());
+        if let Ok(clean_line) = line {
+
+            let tokens = clean_line.split_whitespace();
+            for token in tokens {
+                let mut clean_token = token.to_string();
+                if args.clean {
+                    clean_token = token.replace(&punctuation[..], "");
+                }
+                if args.clean_numbers {
+                    clean_token = clean_token.replace(&numbers[..], "");
+                }
+                if args.lower {
+                    clean_token = clean_token.to_lowercase();
+                }
+                words.push(clean_token);
+            }
+        }
+
+    }
+
     let N = words.len();
     if N == 0 {
         warn!("Warning! {}!", "the specified file(s) contain no text");
